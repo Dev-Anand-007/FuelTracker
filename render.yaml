@@ -1,15 +1,10 @@
 services:
-  # ============================================
-  # PRODUCTION SERVICE
-  # Deploys from: main branch
-  # URL: https://fueltracker.onrender.com
-  # ============================================
   - type: web
     name: fueltracker
     runtime: node
     plan: free
     branch: main
-    buildCommand: cd ../client && npm install && npm run build && cd ../server && npm install && npm run build
+    buildCommand: cd client && NPM_CONFIG_PRODUCTION=false npm install && npm run build && cd ../server && npm install && npm run build
     startCommand: cd server && NODE_ENV=production node dist/index.js
     envVars:
       - key: NODE_ENV
@@ -21,17 +16,12 @@ services:
       - key: JWT_EXPIRE
         value: 7d
 
-  # ============================================
-  # STAGING / TESTING SERVICE
-  # Deploys from: develop branch
-  # URL: https://fueltracker-staging.onrender.com
-  # ============================================
   - type: web
     name: fueltracker-staging
     runtime: node
     plan: free
     branch: develop
-    buildCommand: cd ../client && npm install && npm run build && cd ../server && npm install && npm run build
+    buildCommand: cd client && NPM_CONFIG_PRODUCTION=false npm install && npm run build && cd ../server && npm install && npm run build
     startCommand: cd server && NODE_ENV=production node dist/index.js
     envVars:
       - key: NODE_ENV
