@@ -2,9 +2,11 @@
   "name": "fueltracker-server",
   "version": "1.0.0",
   "scripts": {
-    "dev": "ts-node src/index.ts",
+    "dev": "NODE_ENV=development ts-node src/index.ts",
+    "dev:prod": "NODE_ENV=production ts-node src/index.ts",
     "build": "tsc",
     "start": "NODE_ENV=production node dist/index.js",
+    "start:dev": "NODE_ENV=development node dist/index.js",
     "heroku-postbuild": "cd ../client && npm install && npm run build && cd ../server && npm install && npm run build"
   },
   "engines": {

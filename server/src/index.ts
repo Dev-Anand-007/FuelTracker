@@ -16,7 +16,7 @@ import creditRoutes from './routes/creditRoutes';
 import dashboardRoutes from './routes/dashboardRoutes';
 import reportRoutes from './routes/reportRoutes';
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '..', process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development') });
 
 const app = express();
 
