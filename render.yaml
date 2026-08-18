@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: fueltracker
+    runtime: node
+    plan: free
+    buildCommand: cd ../client && npm install && npm run build && cd ../server && npm install && npm run build
+    startCommand: cd server && NODE_ENV=production node dist/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRE
+        value: 7d
