@@ -54,13 +54,27 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/fueltr
 mongoose.connect(MONGODB_URI)
   .then(() => {
     console.log('MongoDB connected');
+
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
+
+      // Ping the server every 5 minutes
+      setInterval(() => {
+        fetch(`https://fueltracker-9mf7.onrender.com/health`)
+          .then(() => console.log('Keep-alive ping'))
+          .catch((err) => console.error('Keep-alive failed:', err));
+      }, 5 * 60 * 1000);
     });
   })
   .catch((err) => {
     console.error('MongoDB connection error:', err);
     process.exit(1);
   });
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    timestamp: new Date().toISOString()
+  });
+});
 
 export default app;
