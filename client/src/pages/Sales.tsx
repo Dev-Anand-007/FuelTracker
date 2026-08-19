@@ -24,7 +24,7 @@ export default function Sales() {
   const [saleForm, setSaleForm] = useState({ nozzleId: '', employeeId: '', openingReading: 0, closingReading: 0 });
   const [expenseForm, setExpenseForm] = useState({ purpose: '', amount: 0 });
   const [adjustmentForm, setAdjustmentForm] = useState({ purpose: '', amount: 0 });
-  const [settlementForm, setSettlementForm] = useState({ testingAmount: 0, tiffinAmount: 0, cashSubmitted: 0, onlineSubmitted: 0 });
+  const [localEdits, setLocalEdits] = useState<Record<string, { testingAmount: string; tiffinAmount: string; cashSubmitted: string; onlineSubmitted: string }>>({});
 
   useEffect(() => { fetchBase(); }, []);
   useEffect(() => { fetchShifts(); }, [selectedDate]);
@@ -154,6 +154,22 @@ export default function Sales() {
     if (!confirm('Reopen this shift for editing?')) return;
     try { await api.put(`/shifts/${shiftId}/reopen`); toast.success('Shift reopened'); fetchShifts(); }
     catch (err: any) { toast.error(err.response?.data?.message || 'Failed'); }
+  };
+
+  const getLocal = (shiftId: string, field: string, fallback: number) => {
+    return localEdits[shiftId]?.[field as keyof typeof localEdits[string]] ?? (fallback || '');
+  };
+
+  const setLocal = (shiftId: string, field: string, value: string) => {
+    setLocalEdits(prev => ({
+      ...prev,
+      [shiftId]: { ...prev[shiftId], [field]: value },
+    }));
+  };
+
+  const saveLocal = async (shiftId: string, field: string) => {
+    const val = Number(localEdits[shiftId]?.[field as keyof typeof localEdits[string]] || 0);
+    await updateSettlement(shiftId, { [field]: val });
   };
 
   const getNozzleName = (n: any) => typeof n === 'object' ? n.name : 'Unknown';
@@ -477,14 +493,16 @@ export default function Sales() {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <label className="text-zinc-400">Testing (₹)</label>
-                    <input type="number" value={shift.testingAmount || ''}
-                      onChange={(e) => updateSettlement(shift._id, { testingAmount: Number(e.target.value) || 0 })}
+                    <input type="number" value={getLocal(shift._id, 'testingAmount', shift.testingAmount)}
+                      onChange={(e) => setLocal(shift._id, 'testingAmount', e.target.value)}
+                      onBlur={() => saveLocal(shift._id, 'testingAmount')}
                       className="w-full mt-1" min="0" disabled={shift.status === 'FINALIZED'} />
                   </div>
                   <div>
                     <label className="text-zinc-400">Tiffin (₹)</label>
-                    <input type="number" value={shift.tiffinAmount || ''}
-                      onChange={(e) => updateSettlement(shift._id, { tiffinAmount: Number(e.target.value) || 0 })}
+                    <input type="number" value={getLocal(shift._id, 'tiffinAmount', shift.tiffinAmount)}
+                      onChange={(e) => setLocal(shift._id, 'tiffinAmount', e.target.value)}
+                      onBlur={() => saveLocal(shift._id, 'tiffinAmount')}
                       className="w-full mt-1" min="0" disabled={shift.status === 'FINALIZED'} />
                   </div>
                 </div>
@@ -632,14 +650,16 @@ export default function Sales() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-xs text-zinc-400">Cash Submitted (₹)</label>
-                    <input type="number" value={shift.cashSubmitted || ''}
-                      onChange={(e) => updateSettlement(shift._id, { cashSubmitted: Number(e.target.value) || 0 })}
+                    <input type="number" value={getLocal(shift._id, 'cashSubmitted', shift.cashSubmitted)}
+                      onChange={(e) => setLocal(shift._id, 'cashSubmitted', e.target.value)}
+                      onBlur={() => saveLocal(shift._id, 'cashSubmitted')}
                       className="w-full mt-1" min="0" disabled={shift.status === 'FINALIZED'} />
                   </div>
                   <div>
                     <label className="text-xs text-zinc-400">Online Payment (₹)</label>
-                    <input type="number" value={shift.onlineSubmitted || ''}
-                      onChange={(e) => updateSettlement(shift._id, { onlineSubmitted: Number(e.target.value) || 0 })}
+                    <input type="number" value={getLocal(shift._id, 'onlineSubmitted', shift.onlineSubmitted)}
+                      onChange={(e) => setLocal(shift._id, 'onlineSubmitted', e.target.value)}
+                      onBlur={() => saveLocal(shift._id, 'onlineSubmitted')}
                       className="w-full mt-1" min="0" disabled={shift.status === 'FINALIZED'} />
                   </div>
                 </div>
