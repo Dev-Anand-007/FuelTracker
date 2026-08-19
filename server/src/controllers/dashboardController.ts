@@ -26,8 +26,10 @@ const getEndOfDay = (date: Date) => {
 export const getDashboard = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const pumpId = req.user._id;
-    const today = getStartOfDay(new Date());
-    const todayEnd = getEndOfDay(new Date());
+    const dateParam = req.query.date as string;
+    const targetDate = dateParam ? new Date(dateParam) : new Date();
+    const today = getStartOfDay(targetDate);
+    const todayEnd = getEndOfDay(targetDate);
 
     const todayShifts = await Shift.find({
       petrolPump: pumpId,
