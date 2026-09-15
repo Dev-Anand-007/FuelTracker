@@ -360,22 +360,22 @@ export default function VehicleReport() {
                 <label className="text-xs text-zinc-400 mb-1 block">Pump Name</label>
                 <input type="text" value={pumpForm.pumpName}
                   onChange={(e) => setPumpForm({ ...pumpForm, pumpName: e.target.value })}
-                  placeholder="e.g. NILKANTHA ENERGY FILLING TERMINAL" className="w-full" />
+                  placeholder="e.g. Name of Pump" className="w-full" />
               </div>
               <div>
                 <label className="text-xs text-zinc-400 mb-1 block">Address</label>
                 <input type="text" value={pumpForm.address}
                   onChange={(e) => setPumpForm({ ...pumpForm, address: e.target.value })}
-                  placeholder="e.g. Hp Petrol Pump, Sahyadripur, Salpa Road" className="w-full" />
+                  placeholder="e.g. Hp Petrol Pump, Address" className="w-full" />
               </div>
               <div>
                 <label className="text-xs text-zinc-400 mb-1 block">Mobile Numbers</label>
                 <input type="text" value={pumpForm.mobile}
                   onChange={(e) => setPumpForm({ ...pumpForm, mobile: e.target.value })}
-                  placeholder="e.g. 9009317321, 9850466135" className="w-full" />
+                  placeholder="e.g. Mobile Number" className="w-full" />
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <button onClick={savePumpDetails} className="btn-primary text-sm">Save Details</button>
               <button onClick={() => { setShowPumpDetails(false); setPumpForm({ pumpName: report?.pumpName || '', address: report?.address || '', mobile: report?.mobile || '' }); }}
                 className="btn-secondary text-sm">Cancel</button>
@@ -390,12 +390,14 @@ export default function VehicleReport() {
           <div>
             <label className="text-xs text-zinc-400 mb-1 block">Party Name</label>
             {editingParty ? (
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <input type="text" value={partyInput} onChange={(e) => setPartyInput(e.target.value)}
-                  placeholder="Enter party name" className="flex-1" />
-                <button onClick={savePartyName} className="btn-primary text-sm px-3">Save</button>
-                <button onClick={() => { setEditingParty(false); setPartyInput(partyName); }}
-                  className="btn-secondary text-sm px-3">Cancel</button>
+                  placeholder="Enter party name" className="flex-1 min-w-0" />
+                <div className="flex gap-2 shrink-0">
+                  <button onClick={savePartyName} className="btn-primary text-sm px-3">Save</button>
+                  <button onClick={() => { setEditingParty(false); setPartyInput(partyName); }}
+                    className="btn-secondary text-sm px-3">Cancel</button>
+                </div>
               </div>
             ) : (
               <button onClick={() => setEditingParty(true)}
@@ -417,16 +419,16 @@ export default function VehicleReport() {
 
       {/* Add Vehicle */}
       <div className="card">
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <div className="flex items-center gap-2 flex-1">
-            <Car size={18} className="text-zinc-400" />
+            <Car size={18} className="text-zinc-400 shrink-0" />
             <input type="text" value={vehicleNumber}
               onChange={(e) => setVehicleNumber(e.target.value.toUpperCase())}
               onKeyDown={(e) => e.key === 'Enter' && addVehicle()}
-              placeholder="Enter vehicle number (e.g. MH12AB1234)"
-              className="flex-1" />
+              placeholder="Vehicle number (e.g. MH12AB1234)"
+              className="flex-1 min-w-0" />
           </div>
-          <button onClick={addVehicle} className="btn-primary flex items-center gap-2">
+          <button onClick={addVehicle} className="btn-primary flex items-center justify-center gap-2 shrink-0">
             <Plus size={16} /> Add Vehicle
           </button>
         </div>
@@ -439,26 +441,26 @@ export default function VehicleReport() {
           const form = txnForms[vehicle._id] || { date: '', amount: '' };
           return (
             <div key={vehicle._id} className="card">
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
                 <h3 className="font-semibold text-lg flex items-center gap-2">
                   <Car size={18} className="text-[#22C55E]" />
                   {vehicle.vehicleNumber}
                 </h3>
-                <div className="flex items-center gap-3">
-                  <span className="text-sm text-zinc-400">
-                    {vehicle.transactions.length} transaction{vehicle.transactions.length !== 1 ? 's' : ''}
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-xs text-zinc-400">
+                    {vehicle.transactions.length} txn{vehicle.transactions.length !== 1 ? 's' : ''}
                   </span>
-                  <span className="font-bold text-[#22C55E]">{formatCurrency(total)}</span>
+                  <span className="font-bold text-[#22C55E] text-sm">{formatCurrency(total)}</span>
                   <button onClick={() => removeVehicle(vehicle._id)}
-                    className="text-zinc-400 hover:text-red-400 transition-colors">
+                    className="text-zinc-400 hover:text-red-400 transition-colors ml-1">
                     <X size={18} />
                   </button>
                 </div>
               </div>
 
               {vehicle.transactions.length > 0 && (
-                <div className="mb-3 overflow-x-auto">
-                  <table className="w-full text-sm">
+                <div className="mb-3 overflow-x-auto -mx-1.5 px-1.5">
+                  <table className="w-full text-sm min-w-[280px]">
                     <thead>
                       <tr className="border-b border-[#27272A]">
                         <th className="text-left py-2 px-3 text-xs text-zinc-400 font-medium">Date</th>
@@ -491,8 +493,8 @@ export default function VehicleReport() {
                 </div>
               )}
 
-              <div className="flex gap-2 items-end">
-                <div className="flex-1">
+              <div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-end">
+                <div className="flex-1 min-w-0">
                   <label className="text-xs text-zinc-400 mb-1 block">Date</label>
                   <input type="date" value={form.date}
                     onChange={(e) => setTxnForms((prev) => ({
@@ -500,7 +502,7 @@ export default function VehicleReport() {
                     }))}
                     className="w-full" />
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <label className="text-xs text-zinc-400 mb-1 block">Amount (₹)</label>
                   <input type="number" value={form.amount}
                     onChange={(e) => setTxnForms((prev) => ({
@@ -510,7 +512,7 @@ export default function VehicleReport() {
                     placeholder="0.00" min="0" step="0.01" className="w-full" />
                 </div>
                 <button onClick={() => addTransaction(vehicle._id)}
-                  className="btn-primary flex items-center gap-1 px-3">
+                  className="btn-primary flex items-center justify-center gap-1 px-3 shrink-0">
                   <Plus size={14} /> Add
                 </button>
               </div>
