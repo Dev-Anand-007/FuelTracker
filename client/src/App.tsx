@@ -13,6 +13,7 @@ import Sales from './pages/Sales';
 import CreditPage from './pages/Credit';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
+import VehicleReport from './pages/VehicleReport';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated } = useAuth();
@@ -53,6 +54,7 @@ function App() {
             <Route path="credit" element={<CreditPage />} />
             <Route path="reports" element={<Reports />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="vehicle-report" element={<VehicleReport />} />
           </Route>
         </Routes>
       </BrowserRouter>

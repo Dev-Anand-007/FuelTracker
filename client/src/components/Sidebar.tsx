@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard, Droplets, Fuel, Users, UserCheck,
-  CreditCard, FileText, Settings, LogOut, X
+  CreditCard, FileText, Settings, LogOut, X, Car
 } from 'lucide-react';
 
 const links = [
@@ -14,6 +14,7 @@ const links = [
   { to: '/attendance', label: 'Attendance', icon: UserCheck },
   { to: '/credit', label: 'Credit/Lending', icon: CreditCard },
   { to: '/reports', label: 'Reports', icon: FileText },
+  { to: '/vehicle-report', label: 'Vehicle Report', icon: Car },
   { to: '/settings', label: 'Settings', icon: Settings },
 ];
 
