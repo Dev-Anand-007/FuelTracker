@@ -33,7 +33,7 @@ const formatDate = (d: string) => {
   const date = new Date(d);
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = String(date.getFullYear()).slice(-2);
+  const year = String(date.getFullYear());
   return `${day}-${month}-${year}`;
 };
 
@@ -178,7 +178,7 @@ export default function VehicleReport() {
     // doc.setFillColor(34, 197, 94);
     // doc.rect(margin, y, pageWidth - 2 * margin, 12, 'F');
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(16);
+    doc.setFontSize(20);
     doc.setTextColor(0, 0, 0);
     doc.text(report.pumpName || "Vehicle Report", pageWidth / 2, y + 8, {
       align: "center",
@@ -188,7 +188,7 @@ export default function VehicleReport() {
     // --- Address ---
     if (report.address) {
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
+      doc.setFontSize(11);
       doc.setTextColor(60, 60, 60);
       doc.text(report.address, pageWidth / 2, y, { align: "center" });
       y += 5;
@@ -197,7 +197,7 @@ export default function VehicleReport() {
     // --- Mobile Numbers ---
     if (report.mobile) {
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
+      doc.setFontSize(11);
       doc.setTextColor(60, 60, 60);
       doc.text(`MOB: ${report.mobile}`, pageWidth / 2, y, { align: "center" });
       y += 5;
@@ -206,7 +206,7 @@ export default function VehicleReport() {
     // --- Party Name + Date Range ---
     y += 2;
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
+    doc.setFontSize(11);
     doc.setTextColor(0);
     if (report.partyName) {
       doc.setFont("helvetica", "bold");
@@ -216,12 +216,42 @@ export default function VehicleReport() {
       doc.setFont("helvetica", "normal");
     }
     if (dateFrom && dateTo) {
-      doc.text(
-        `Supply and Breakup for the Period: ${formatDate(dateFrom)} to ${formatDate(dateTo)}`,
-        pageWidth / 2,
-        y + 6,
-        { align: "center" },
-      );
+      doc.setFontSize(10);
+
+      const prefix = "Supply and Breakup for the Period: ";
+      const fromDate = formatDate(dateFrom);
+      const separator = " to ";
+      const toDate = formatDate(dateTo);
+
+      const fullText = prefix + fromDate + separator + toDate;
+      const fullWidth = doc.getTextWidth(fullText);
+
+      const startX = (pageWidth - fullWidth) / 2;
+      const textY = y + 6;
+
+      // Prefix
+      doc.text(prefix, startX, textY);
+
+      // From date
+      const fromX = startX + doc.getTextWidth(prefix);
+      doc.text(fromDate, fromX, textY);
+
+      // Underline first date
+      const fromWidth = doc.getTextWidth(fromDate);
+      doc.setLineWidth(0.3);
+      doc.line(fromX, textY + 1, fromX + fromWidth, textY + 1);
+
+      // "to"
+      const toX = fromX + fromWidth;
+      doc.text(separator, toX, textY);
+
+      // To date
+      const secondDateX = toX + doc.getTextWidth(separator);
+      doc.text(toDate, secondDateX, textY);
+
+      // Underline second date
+      const toWidth = doc.getTextWidth(toDate);
+      doc.line(secondDateX, textY + 1, secondDateX + toWidth, textY + 1);
     }
     y += 12;
 
@@ -313,10 +343,10 @@ export default function VehicleReport() {
         fillColor: [255, 255, 255], // White background
         textColor: [0, 0, 0], // Black text
         fontStyle: "bold",
-        fontSize: 8,
-        cellPadding: 2,
+        fontSize: 12,
+        cellPadding: 2.5,
       },
-      bodyStyles: { fontSize: 7.5, textColor: [30, 30, 30], cellPadding: 1.5 },
+      bodyStyles: { fontSize: 11, textColor: [0, 0, 0], cellPadding: 2.2 },
       columnStyles: {
         0: { cellWidth: halfW * 0.28 },
         1: { cellWidth: halfW * 0.42 },
@@ -354,10 +384,10 @@ export default function VehicleReport() {
         fillColor: [255, 255, 255], // White background
         textColor: [0, 0, 0], // Black text
         fontStyle: "bold",
-        fontSize: 8,
-        cellPadding: 2,
+        fontSize: 12,
+        cellPadding: 2.5,
       },
-      bodyStyles: { fontSize: 7.5, textColor: [30, 30, 30], cellPadding: 1.5 },
+      bodyStyles: { fontSize: 11, textColor: [0, 0, 0], cellPadding: 2.2 },
       columnStyles: {
         0: { cellWidth: halfW * 0.28 },
         1: { cellWidth: halfW * 0.42 },
@@ -389,11 +419,11 @@ export default function VehicleReport() {
     // --- Totals row ---
     doc.setDrawColor(0);
     doc.setLineWidth(0.3);
-    doc.line(margin, y, pageWidth - margin, y);
-    y += 5;
+    doc.line(margin, y + 3, pageWidth - margin, y + 3);
+    y += 8;
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(9);
+    doc.setFontSize(11);
     doc.setTextColor(0);
     doc.text(
       `Total: ${leftTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`,
@@ -405,7 +435,7 @@ export default function VehicleReport() {
       pageWidth / 2 + 4,
       y,
     );
-    y += 8;
+    y += 12;
 
     // --- Grand Total ---
     // --- Grand Total ---
@@ -415,11 +445,11 @@ export default function VehicleReport() {
     doc.setDrawColor(50, 50, 50);
     doc.setLineWidth(0.4);
 
-    doc.rect(margin, y - 4, pageWidth - 2 * margin, 9, "FD");
+    doc.rect(margin, y - 4, pageWidth - 2 * margin, 11, "FD");
 
     // Grand total text
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(11);
+    doc.setFontSize(13);
     doc.setTextColor(0, 0, 0);
 
     doc.text(
@@ -427,11 +457,15 @@ export default function VehicleReport() {
         minimumFractionDigits: 2,
       })}`,
       pageWidth / 2,
-      y + 2,
+      y + 3,
       { align: "center" },
     );
 
     doc.save("vehicle-report.pdf");
+    // const pdfBlob = doc.output("blob");
+    // const pdfUrl = URL.createObjectURL(pdfBlob);
+    // window.open(pdfUrl, "_blank");
+    // return;
   };
 
   if (loading) {
