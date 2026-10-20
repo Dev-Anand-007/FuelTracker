@@ -20,7 +20,7 @@ type ExpenseForm = {
 const emptyExpense: ExpenseForm = { date: "", amount: "", description: "" };
 
 const formatCurrency = (value: number) =>
-  `₹${Number(value || 0).toLocaleString("en-IN", {
+  `Rs ${Number(value || 0).toLocaleString("en-IN", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
@@ -221,7 +221,7 @@ export default function MonthlyExpense() {
 
     autoTable(doc, {
       startY: y,
-      head: [["Date", "Amount (₹)", "Description"]],
+      head: [["Date", "Amount (Rs)", "Description"]],
       body: rows,
       theme: "grid",
       headStyles: { fillColor: [34, 197, 94], textColor: 0, fontStyle: "bold" },
@@ -423,7 +423,7 @@ export default function MonthlyExpense() {
               </label>
 
               <label className="block text-sm text-zinc-300">
-                Amount (₹) <span className="text-red-400">*</span>
+                Amount (Rs) <span className="text-red-400">*</span>
                 <input
                   type="number"
                   required
