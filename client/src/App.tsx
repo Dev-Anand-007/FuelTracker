@@ -12,6 +12,7 @@ import AttendancePage from './pages/Attendance';
 import Sales from './pages/Sales';
 import CreditPage from './pages/Credit';
 import Reports from './pages/Reports';
+import MonthlyExpense from './pages/MonthlyExpense';
 import Settings from './pages/Settings';
 import VehicleReport from './pages/VehicleReport';
 
@@ -55,6 +56,7 @@ function App() {
             <Route path="reports" element={<Reports />} />
             <Route path="settings" element={<Settings />} />
             <Route path="vehicle-report" element={<VehicleReport />} />
+            <Route path="monthly-expenses" element={<MonthlyExpense />} />
           </Route>
         </Routes>
       </BrowserRouter>

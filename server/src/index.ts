@@ -16,6 +16,7 @@ import creditRoutes from './routes/creditRoutes';
 import dashboardRoutes from './routes/dashboardRoutes';
 import reportRoutes from './routes/reportRoutes';
 import vehicleReportRoutes from './routes/vehicleReportRoutes';
+import expenseRoutes from './routes/expenseRoutes';
 
 dotenv.config({ path: path.join(__dirname, '..', process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development') });
 
@@ -35,6 +36,7 @@ app.use('/api/credit', creditRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/vehicle-report', vehicleReportRoutes);
+app.use('/api/expenses', expenseRoutes);
 
 app.get('/api/health', (_req, res) => {
   res.json({ success: true, message: 'FuelTrack API is running' });
